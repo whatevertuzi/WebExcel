@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcy.webexcel.DaoSys.mapper.CustomerServiceMapper">
+
+    <resultMap id="BaseResultMap" type="com.zcy.webexcel.DaoSys.CustomerService">
+            <id property="date" column="date" jdbcType="DATE"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="complaintPlan" column="complaint_plan" jdbcType="INTEGER"/>
+            <result property="complaintDone" column="complaint_done" jdbcType="INTEGER"/>
+            <result property="complaintRate" column="complaint_rate" jdbcType="DOUBLE"/>
+            <result property="timePlan" column="time_plan" jdbcType="DOUBLE"/>
+            <result property="timeDone" column="time_done" jdbcType="DOUBLE"/>
+            <result property="timeStatus" column="time_status" jdbcType="VARCHAR"/>
+            <result property="onHotelPlan" column="on_hotel_plan" jdbcType="INTEGER"/>
+            <result property="onHotelDone" column="on_hotel_done" jdbcType="INTEGER"/>
+            <result property="onHotelRate" column="on_hotel_rate" jdbcType="DOUBLE"/>
+            <result property="onHotelResPlan" column="on_hotel_res_plan" jdbcType="DOUBLE"/>
+            <result property="onHotelResDone" column="on_hotel_res_done" jdbcType="DOUBLE"/>
+            <result property="onHotelResRate" column="on_hotel_res_rate" jdbcType="DOUBLE"/>
+            <result property="hotelMisPlan" column="hotel_mis_plan" jdbcType="INTEGER"/>
+            <result property="hotelMisDone" column="hotel_mis_done" jdbcType="INTEGER"/>
+            <result property="hotelMisRate" column="hotel_mis_rate" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        date,title,complaint_plan,
+        complaint_done,complaint_rate,time_plan,
+        time_done,time_status,on_hotel_plan,
+        on_hotel_done,on_hotel_rate,on_hotel_res_plan,
+        on_hotel_res_done,on_hotel_res_rate,hotel_mis_plan,
+        hotel_mis_done,hotel_mis_rate
+    </sql>
+</mapper>

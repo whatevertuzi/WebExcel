@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcy.webexcel.DaoSys.mapper.SysUserMapper">
+
+    <resultMap id="BaseResultMap" type="com.zcy.webexcel.DaoSys.mapper.SysUser">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="account" column="account" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+            <result property="enabled" column="enabled" jdbcType="TINYINT"/>
+            <result property="accountNonExpired" column="account_non_expired" jdbcType="TINYINT"/>
+            <result property="accountNonLocked" column="account_non_locked" jdbcType="TINYINT"/>
+            <result property="credentialsNonExpired" column="credentials_non_expired" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="createUser" column="create_user" jdbcType="INTEGER"/>
+            <result property="updateUser" column="update_user" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,account,user_name,
+        password,last_login_time,enabled,
+        account_non_expired,account_non_locked,credentials_non_expired,
+        create_time,update_time,create_user,
+        update_user
+    </sql>
+
+    <!--根据用户名查询用户-->
+    <select id="selectByName" resultMap="BaseResultMap">
+        select * from sys_user where account = #{userName};
+    </select>
+    <select id="selectIdByAccount" resultType="com.zcy.webexcel.DaoSys.mapper.SysUser">
+        select * from sys_user where account = #{account};
+    </select>
+
+
+</mapper>

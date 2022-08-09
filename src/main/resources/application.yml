@@ -1,0 +1,30 @@
+server:
+  port: 8889
+spring:
+  datasource:
+    one:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://10.100.103.152/customer_service
+      username: zhangcy
+      password: Abcdef1234cyz
+      type: com.alibaba.druid.pool.DruidDataSource
+          #   数据源其他配置
+      initialSize: 5
+      maxActive: 20
+#      minIdle: 5
+#      maxWait: 60000
+#      timeBetweenEvictionRunsMillis: 60000
+#      minEvictableIdleTimeMillis: 300000
+#      validationQuery: SELECT 1 FROM DUAL
+#      testWhileIdle: true
+#      testOnBorrow: false
+#      testOnReturn: false
+#      poolPreparedStatements: true
+    two:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://10.3.103.182/day_data
+      username: root
+      password: 123456
+  redis:
+    host: 10.3.103.182
+    port: 6379

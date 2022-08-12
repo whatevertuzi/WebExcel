@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class ItFillExcel {
-
     private String title;
     private Double incallAnswerRate;
     private String incallAnswerRateIsDone;
@@ -22,11 +21,11 @@ public class ItFillExcel {
     private Integer dayDone;
     private Integer people;
     private Integer hour;
+    private String isDone;
     private Double dayAvgDone;
     private String signaturePlan;
     private String signature;
     private String signatureIsDone;
     private String signatureDiff;
     private Integer signatureMonthDone;
-
 }

@@ -1,4 +1,4 @@
-package com.zcy.webexcel.DaoSys.mapper;
+package com.zcy.webexcel.DaoSys.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSON;
 import com.zcy.webexcel.DaoSys.vo.JsonResult;
 import com.zcy.webexcel.DaoSys.vo.ResultCode;
 import com.zcy.webexcel.DaoSys.vo.ResultTool;
-import com.zcy.webexcel.Utils.WebUtils;
-import org.springframework.http.HttpStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -19,11 +19,12 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthError implements AuthenticationEntryPoint {
+    private static final Logger LOGGER = LogManager.getLogger(JwtAuthError.class);
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
         //返回json数据
-        e.printStackTrace();
-        JsonResult result = null;
+        LOGGER.warn("登陆失败:"+e.getMessage()+"\n"+"IP:"+request.getHeader("Origin"));
+        JsonResult<ResultCode> result;
         if (e instanceof AccountExpiredException) {
             if (e.getMessage().equals("token")){
                 //token非法

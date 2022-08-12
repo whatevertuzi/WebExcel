@@ -63,10 +63,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             AccountExpiredException accountExpiredException = new AccountExpiredException("tokenExpired");
             this.jwtAuthError.commence(request, response, accountExpiredException);
             return;
-//            //处理编码方式，防止中文乱码的情况
-//            response.setContentType("text/json;charset=utf-8");
-//            //塞到HttpServletResponse中返回给前台
-//            response.getWriter().write(JSON.toJSONString(result));
+
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
             AccountExpiredException accountExpiredException = new AccountExpiredException("token");
@@ -85,7 +82,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         //存入SecurityContextHolder
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        List<SysPermission> sysPermissions = null;
+        List<SysPermission> sysPermissions;
         //获取该用户所拥有的权限
         Integer userId = sysUserMapper.selectIdByAccount(loginUser.getUsername()).getId();
         sysPermissions = sysPermissionMapper.selectListByUser(userId);

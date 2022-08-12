@@ -1,7 +1,7 @@
 package com.zcy.webexcel.config;
 
 import com.zcy.webexcel.Component.*;
-import com.zcy.webexcel.service.UserDetailsServiceImpl;
+import com.zcy.webexcel.service.impl.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,28 +61,19 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                // 基于 token，不需要 csrf
                 .cors().and()
                 .csrf().disable()
-                // 基于 token，不需要 session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                // 设置 jwtAuthError 处理认证失败、鉴权失败
                 .exceptionHandling().authenticationEntryPoint(jwtAuthError).accessDeniedHandler(accessDeniedHandler)
-//                //登出之后删除cookie
-//                .deleteCookies("JSESSIONID")
                 .and()
-                // 下面开始设置权限
                 .authorizeRequests(authorize -> {
                             try {
                                 authorize
-                                        // 请求放开
                                         .antMatchers("/user/login").permitAll()
                                         .antMatchers("/user/logout").permitAll()
                                         .antMatchers("/getUser").hasAuthority("query_user")
-                                        .antMatchers("/getdata").hasAuthority("query_data")
-                                        .antMatchers("/export").hasAuthority("query_data")
-//                                        .antMatchers("/**").permitAll()
-                                        // 其他地址的访问均需验证权限
+                                        .antMatchers("/itgroup/**").hasAuthority("query_it")
+                                        .antMatchers("/booking/**").hasAuthority("query_booking")
                                         .anyRequest().authenticated();
 
                             } catch (Exception e) {
@@ -90,10 +81,7 @@ public class SecurityConfig {
                             }
                     }
                 )
-                // 添加 JWT 过滤器，JWT 过滤器在用户名密码认证过滤器之前
                 .addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter.class)
-                // 登入
-                // 认证用户时用户信息加载配置，注入springAuthUserService
                 .userDetailsService(userDetailsService)
                 .build();
     }

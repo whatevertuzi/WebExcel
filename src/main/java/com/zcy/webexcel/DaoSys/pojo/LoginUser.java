@@ -1,21 +1,17 @@
 package com.zcy.webexcel.DaoSys.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.zcy.webexcel.DaoSys.SysPermission;
-import com.zcy.webexcel.DaoSys.mapper.SysUser;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * @Author 三更  B站： https://space.bilibili.com/663528522
+ * @Author ZCY
  */
 @Data
 @NoArgsConstructor
@@ -25,8 +21,6 @@ public class LoginUser implements UserDetails {
         
     //存储权限信息
     private List<GrantedAuthority> grantedAuthorities;
-    
-
 
     //存储SpringSecurity所需要的权限信息的集合
     @JSONField(serialize = false)
@@ -37,7 +31,6 @@ public class LoginUser implements UserDetails {
         this.user = user;
         this.grantedAuthorities = grantedAuthorities;
     }
-
 
     @Override
     public  Collection<? extends GrantedAuthority> getAuthorities() {
@@ -64,21 +57,21 @@ public class LoginUser implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return user.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return user.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isEnabled();
     }
 }

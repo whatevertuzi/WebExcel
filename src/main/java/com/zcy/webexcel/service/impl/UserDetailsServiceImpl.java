@@ -1,9 +1,8 @@
-package com.zcy.webexcel.service;
+package com.zcy.webexcel.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zcy.webexcel.DaoSys.SysPermission;
 import com.zcy.webexcel.DaoSys.mapper.SysPermissionMapper;
-import com.zcy.webexcel.DaoSys.mapper.SysUser;
+import com.zcy.webexcel.DaoSys.pojo.SysUser;
 import com.zcy.webexcel.DaoSys.mapper.SysUserMapper;
 import com.zcy.webexcel.DaoSys.pojo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,13 @@ import java.util.List;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    @Autowired
-    private SysUserMapper sysUserMapper;
-    @Autowired
-    private SysPermissionMapper sysPermissionMapper;
+    private final SysUserMapper sysUserMapper;
+    private final SysPermissionMapper sysPermissionMapper;
+
+    public UserDetailsServiceImpl(SysUserMapper sysUserMapper, SysPermissionMapper sysPermissionMapper) {
+        this.sysUserMapper = sysUserMapper;
+        this.sysPermissionMapper = sysPermissionMapper;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -37,39 +39,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         List<SysPermission> sysPermissions;
-        if (sysUser != null) {
-            //获取该用户所拥有的权限
-            sysPermissions = sysPermissionMapper.selectListByUser(sysUser.getId());
-            // 声明用户授权
-            sysPermissions.forEach(sysPermission -> {
-                GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(sysPermission.getPermissionCode());
-                grantedAuthorities.add(grantedAuthority);
-            });
-        }
+        //获取该用户所拥有的权限
+        sysPermissions = sysPermissionMapper.selectListByUser(sysUser.getId());
+        // 声明用户授权
+        sysPermissions.forEach(sysPermission -> {
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(sysPermission.getPermissionCode());
+            grantedAuthorities.add(grantedAuthority);
+        });
         boolean sysUserEnabled;
         boolean sysUserAccountNonExpired;
         boolean sysUserAccountNonLocked;
         boolean sysUserCredentialsNonExpired;
-        if (sysUser.getEnabled() == 1) {
-            sysUserEnabled = true;
-        } else {
-            sysUserEnabled = false;
-        }
-        if (sysUser.getAccountNonExpired() == 1) {
-            sysUserAccountNonExpired = true;
-        } else {
-            sysUserAccountNonExpired = false;
-        }
-        if (sysUser.getAccountNonLocked() == 1) {
-            sysUserAccountNonLocked = true;
-        } else {
-            sysUserAccountNonLocked = false;
-        }
-        if (sysUser.getCredentialsNonExpired() == 1) {
-            sysUserCredentialsNonExpired = true;
-        } else {
-            sysUserCredentialsNonExpired = false;
-        }
+        sysUserEnabled = sysUser.getEnabled() == 1;
+        sysUserAccountNonExpired = sysUser.getAccountNonExpired() == 1;
+        sysUserAccountNonLocked = sysUser.getAccountNonLocked() == 1;
+        sysUserCredentialsNonExpired = sysUser.getCredentialsNonExpired() == 1;
         return new LoginUser(new User(sysUser.getAccount(), sysUser.getPassword(), sysUserEnabled, sysUserAccountNonExpired, sysUserAccountNonLocked, sysUserCredentialsNonExpired, grantedAuthorities), grantedAuthorities);
     }
 }

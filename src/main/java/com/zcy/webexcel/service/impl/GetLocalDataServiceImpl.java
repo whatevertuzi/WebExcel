@@ -1,14 +1,16 @@
-package com.zcy.webexcel.Utils;
+package com.zcy.webexcel.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zcy.webexcel.DaoSys.pojo.CrsData;
 import com.zcy.webexcel.DaoSys.pojo.LocalExcelIt;
+import com.zcy.webexcel.Utils.SimpleHttpUtils;
+import com.zcy.webexcel.service.GetLocalDataService;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 
 @Service
-public class LocalExcelImpl implements LocalExcel {
+public class GetLocalDataServiceImpl implements GetLocalDataService {
     @Override
     public LocalExcelIt getLocalExcel(String beginTime) throws Exception {
         String Url = "http://10.3.28.20:8899/getexcel";

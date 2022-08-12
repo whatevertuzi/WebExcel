@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zcy.webexcel.DaoSys.mapper.SysUserMapper">
 
-    <resultMap id="BaseResultMap" type="com.zcy.webexcel.DaoSys.mapper.SysUser">
+    <resultMap id="BaseResultMap" type="com.zcy.webexcel.DaoSys.pojo.SysUser">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="account" column="account" jdbcType="VARCHAR"/>
             <result property="userName" column="user_name" jdbcType="VARCHAR"/>
@@ -32,7 +32,7 @@
     <select id="selectByName" resultMap="BaseResultMap">
         select * from sys_user where account = #{userName};
     </select>
-    <select id="selectIdByAccount" resultType="com.zcy.webexcel.DaoSys.mapper.SysUser">
+    <select id="selectIdByAccount" resultType="com.zcy.webexcel.DaoSys.pojo.SysUser">
         select * from sys_user where account = #{account};
     </select>
 

@@ -1,13 +1,14 @@
-package com.zcy.webexcel.service;
+package com.zcy.webexcel.service.impl;
 
 import com.zcy.webexcel.Component.RedisCache;
-import com.zcy.webexcel.DaoSys.mapper.SysUser;
+import com.zcy.webexcel.DaoSys.pojo.SysUser;
 import com.zcy.webexcel.DaoSys.mapper.SysUserMapper;
 import com.zcy.webexcel.DaoSys.pojo.LoginUser;
 import com.zcy.webexcel.DaoSys.vo.JsonResult;
 import com.zcy.webexcel.DaoSys.vo.ResultCode;
 import com.zcy.webexcel.DaoSys.vo.ResultTool;
 import com.zcy.webexcel.Utils.JwtUtil;
+import com.zcy.webexcel.service.AccessService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureException;
 import org.apache.logging.log4j.LogManager;
@@ -36,16 +37,13 @@ public class AccessServiceImpl implements AccessService {
     }
 
     @Override
-    public JsonResult login(SysUser user) {
+    public JsonResult<String> login(SysUser user) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getAccount(),user.getPassword());
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
-        if(!authentication.isAuthenticated()){
-            return ResultTool.fail(ResultCode.USER_CREDENTIALS_ERROR);
-        }
         //使用userid生成token
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         String userId = loginUser.getUser().getUsername();
-        String jwt = JwtUtil.createJWT(userId,3600000L);// 60秒 * 60分钟 *1000毫秒  一个小时
+        String jwt = JwtUtil.createJWT(userId,24*3600000L);// 60秒 * 60分钟 *1000毫秒  一个小时
         //authenticate存入redis
         redisCache.setCacheObject("login:"+userId,loginUser);
         //把token响应给前端
@@ -60,7 +58,7 @@ public class AccessServiceImpl implements AccessService {
     }
 
     @Override
-    public JsonResult logout(String token) throws Exception {
+    public JsonResult<ResultCode> logout(String token) throws Exception {
         String userid;
         try{
             Claims claims = JwtUtil.parseJWT(token);
@@ -70,6 +68,6 @@ public class AccessServiceImpl implements AccessService {
             return ResultTool.fail(ResultCode.USER_TOKEN_ILLEGAL);
         }
         log.info(userid+"退出了系统");
-        return ResultTool.success();
+        return ResultTool.success(ResultCode.SUCCESS);
     }
 }

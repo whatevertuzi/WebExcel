@@ -61,7 +61,7 @@ public class ItGroupController {
         }
     }
     //呼损回访
-    @PostMapping("recallrecord")
+    @GetMapping("recallrecord")
     public void getRecallRecord(HttpServletResponse response, @RequestParam("data")String data){
         DataParams dataParams = JSON.parseObject(data,DataParams.class);
         try {

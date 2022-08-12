@@ -383,9 +383,9 @@ public class ItGroupServiceImpl implements ItGroupService {
         InternetAddress duhaiqiao = new InternetAddress("duhaiqiao@998.com","杜海桥");
         InternetAddress zhangqian = new InternetAddress("zhangqiana@998.com","张倩");
         InternetAddress zhangchenyang = new InternetAddress("zhangchenyang@998.com","张晨阳");
-        mimeMessage.setRecipient(Message.RecipientType.TO,zhangchenyang);
-//        InternetAddress[] internetAddressCC={duhaiqiao,zhangqian,zhangchenyang};
-//        mimeMessage.setRecipients(Message.RecipientType.CC,internetAddressCC);
+        mimeMessage.setRecipient(Message.RecipientType.TO,zhuwentao);
+        InternetAddress[] internetAddressCC={duhaiqiao,zhangqian,zhangchenyang};
+        mimeMessage.setRecipients(Message.RecipientType.CC,internetAddressCC);
         MimeBodyPart text = new MimeBodyPart();
         MimeBodyPart appendix = new MimeBodyPart();
         MimeBodyPart image = new MimeBodyPart();

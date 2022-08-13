@@ -1,6 +1,6 @@
 package com.zcy.webexcel.service.impl;
 
-import com.zcy.webexcel.DaoSys.pojo.CrsData;
+import com.zcy.webexcel.vo.CrsData;
 import com.zcy.webexcel.Utils.JsoupUtil;
 import com.zcy.webexcel.service.GetCrsDataService;
 import org.jsoup.nodes.Document;
@@ -43,10 +43,10 @@ public class GetCrsDataServiceImpl implements GetCrsDataService {
        Document totalDoc = JsoupUtil.getDoc("",formatTime,"-1","","");
        Elements totalSpan = totalDoc.getElementsByClass("total_count");
 
-       int businessHistory = Integer.parseInt(businessHisStatus0Span.text()+businessHisStatus1Span.text());
-       int businessUnDone = Integer.parseInt(businessUnDoneStatus0Span.text()+businessUnDoneStatus1Span.text());
-       int crossHistory = Integer.parseInt(crossHisStatus0Span.text()+crossHisStatus1Span.text());
-       int crossUnDone = Integer.parseInt(crossUnDoneStatus0Span.text()+crossUnDoneStatus1Span.text());
+       int businessHistory = Integer.parseInt(businessHisStatus0Span.text())+Integer.parseInt(businessHisStatus1Span.text());
+       int businessUnDone = Integer.parseInt(businessUnDoneStatus0Span.text())+Integer.parseInt(businessUnDoneStatus1Span.text());
+       int crossHistory = Integer.parseInt(crossHisStatus0Span.text())+Integer.parseInt(crossHisStatus1Span.text());
+       int crossUnDone = Integer.parseInt(crossUnDoneStatus0Span.text())+Integer.parseInt(crossUnDoneStatus1Span.text());
        int cross = Integer.parseInt(crossStatus3Span.text());
        int total = Integer.parseInt(totalSpan.text());
 

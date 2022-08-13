@@ -6,12 +6,14 @@ import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.mail.util.MailSSLSocketFactory;
 import com.zcy.webexcel.Component.GetVariance;
-import com.zcy.webexcel.DaoSys.pojo.*;
-import com.zcy.webexcel.DaoSys.vo.ItFillExcel;
-import com.zcy.webexcel.DaoSys.vo.JsonResult;
-import com.zcy.webexcel.DaoSys.vo.ResultCode;
-import com.zcy.webexcel.DaoSys.vo.ResultTool;
+import com.zcy.webexcel.pojo.DataParams;
+import com.zcy.webexcel.pojo.LaiHuSys.*;
+import com.zcy.webexcel.vo.ItFillExcel;
+import com.zcy.webexcel.vo.JsonResult;
+import com.zcy.webexcel.vo.ResultCode;
+import com.zcy.webexcel.vo.ResultTool;
 import com.zcy.webexcel.Utils.Base2ImgUtil;
+import com.zcy.webexcel.pojo.LocalData.LocalDailyIt;
 import com.zcy.webexcel.service.GetLocalDataService;
 import com.zcy.webexcel.Utils.WriteImgUtil;
 import com.zcy.webexcel.service.GetLaiHuDataService;
@@ -100,10 +102,10 @@ public class ItGroupServiceImpl implements ItGroupService {
         }
 
         //当日报修记录excel
-        LocalExcelIt dayLocalExcelIt = getLocalDataService.getLocalExcel(beginTime);
+        LocalDailyIt dayLocalDailyIt = getLocalDataService.getLocalExcel(beginTime);
 
         //当月报修记录excel
-        LocalExcelIt monthLocalExcelIt = getLocalDataService.getLocalExcel(beginTime.substring(0,7));
+        LocalDailyIt monthLocalDailyIt = getLocalDataService.getLocalExcel(beginTime.substring(0,7));
 
         ItFillExcel itFillExcel = new ItFillExcel();
 
@@ -153,17 +155,17 @@ public class ItGroupServiceImpl implements ItGroupService {
         itFillExcel.setPercentageMonthDone(twoScale(monthsatisifyList.stream().mapToDouble(Satisfy::getFloatPercentage).average().getAsDouble())*0.01);
 
         //当日报修处理数
-        itFillExcel.setDayDone(dayLocalExcelIt.getDayDone());
+        itFillExcel.setDayDone(dayLocalDailyIt.getDayDone());
 
         //当日发日报人数
-        if (dayLocalExcelIt.getSignature()!=0){
-            itFillExcel.setPeople(dayLocalExcelIt.getPeople()-1);
+        if (dayLocalDailyIt.getSignature()!=0){
+            itFillExcel.setPeople(dayLocalDailyIt.getPeople()-1);
         }else {
-            itFillExcel.setPeople(dayLocalExcelIt.getPeople());
+            itFillExcel.setPeople(dayLocalDailyIt.getPeople());
         }
 
         //当日处理报修用时
-        itFillExcel.setHour(dayLocalExcelIt.getHour());
+        itFillExcel.setHour(dayLocalDailyIt.getHour());
 
         //人日均处理数
         itFillExcel.setDayAvgDone((double)itFillExcel.getDayDone() / itFillExcel.getPeople());
@@ -176,12 +178,12 @@ public class ItGroupServiceImpl implements ItGroupService {
         }
 
         //当日会签回访数量
-        itFillExcel.setSignature(String.valueOf(dayLocalExcelIt.getSignature()));
-        if (dayLocalExcelIt.getSignature() >= 30) {
+        itFillExcel.setSignature(String.valueOf(dayLocalDailyIt.getSignature()));
+        if (dayLocalDailyIt.getSignature() >= 30) {
             itFillExcel.setSignaturePlan("30");
             itFillExcel.setSignatureIsDone("已完成");
             itFillExcel.setSignatureDiff("/");
-        } else if (dayLocalExcelIt.getSignature()==0) {
+        } else if (dayLocalDailyIt.getSignature()==0) {
             itFillExcel.setSignaturePlan("/");
             itFillExcel.setSignature("/");
             itFillExcel.setSignatureIsDone("/");
@@ -189,11 +191,11 @@ public class ItGroupServiceImpl implements ItGroupService {
         } else {
             itFillExcel.setSignaturePlan("30");
             itFillExcel.setSignatureIsDone("未完成");
-            itFillExcel.setSignatureDiff(String.valueOf(30 - dayLocalExcelIt.getSignature()));
+            itFillExcel.setSignatureDiff(String.valueOf(30 - dayLocalDailyIt.getSignature()));
         }
 
         //当月会签回访总数
-        itFillExcel.setSignatureMonthDone(monthLocalExcelIt.getSignature());
+        itFillExcel.setSignatureMonthDone(monthLocalDailyIt.getSignature());
 
         //excel写在本地
         ExcelWriter excellocalWriter = EasyExcel.write(  "FilesIt/"+"IT" + beginTime.substring(0, 10) + ".xlsx").withTemplate(itFillPath).build();

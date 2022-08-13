@@ -1,6 +1,6 @@
 package com.zcy.webexcel.Component;
 
-import com.zcy.webexcel.DaoSys.SysPermission;
+import com.zcy.webexcel.DaoSys.pojo.SysPermission;
 import com.zcy.webexcel.DaoSys.mapper.SysPermissionMapper;
 import com.zcy.webexcel.DaoSys.mapper.SysUserMapper;
 import com.zcy.webexcel.DaoSys.pojo.LoginUser;

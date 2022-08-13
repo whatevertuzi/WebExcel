@@ -2,8 +2,8 @@ package com.zcy.webexcel.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.zcy.webexcel.DaoSys.pojo.CrsData;
-import com.zcy.webexcel.DaoSys.pojo.LocalExcelIt;
+import com.zcy.webexcel.vo.CrsData;
+import com.zcy.webexcel.pojo.LocalData.LocalDailyIt;
 import com.zcy.webexcel.Utils.SimpleHttpUtils;
 import com.zcy.webexcel.service.GetLocalDataService;
 import org.springframework.stereotype.Service;
@@ -12,25 +12,14 @@ import java.util.HashMap;
 @Service
 public class GetLocalDataServiceImpl implements GetLocalDataService {
     @Override
-    public LocalExcelIt getLocalExcel(String beginTime) throws Exception {
+    public LocalDailyIt getLocalExcel(String beginTime) throws Exception {
         String Url = "http://10.3.28.20:8899/getexcel";
         JSONObject Param = new JSONObject();
         Param.put("beginTime", beginTime);
         HashMap<String,String> header =new HashMap<>();
         setHeader(header);
         JSONObject result = JSONObject.parseObject(SimpleHttpUtils.post(Url, header, Param.toJSONString().getBytes()));
-        return JSON.parseObject(String.valueOf(JSON.parseObject(result.get("data").toString())), LocalExcelIt.class);
-    }
-
-    @Override
-    public CrsData getCrs(String beginTime) throws Exception {
-        String Url = "http://10.3.28.20:8899/getcrs";
-        JSONObject Param = new JSONObject();
-        Param.put("beginTime", beginTime);
-        HashMap<String,String> header =new HashMap<>();
-        setHeader(header);
-        JSONObject result = JSONObject.parseObject(SimpleHttpUtils.post(Url, header, Param.toJSONString().getBytes()));
-        return JSON.parseObject(String.valueOf(JSON.parseObject(result.get("data").toString())), CrsData.class);
+        return JSON.parseObject(String.valueOf(JSON.parseObject(result.get("data").toString())), LocalDailyIt.class);
     }
 
     private static void setHeader(HashMap<String, String> header) {

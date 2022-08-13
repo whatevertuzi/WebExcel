@@ -1,11 +1,10 @@
 package com.zcy.webexcel.service.impl;
 
-import com.zcy.webexcel.DaoSys.SysPermission;
+import com.zcy.webexcel.DaoSys.pojo.SysPermission;
 import com.zcy.webexcel.DaoSys.mapper.SysPermissionMapper;
 import com.zcy.webexcel.DaoSys.pojo.SysUser;
 import com.zcy.webexcel.DaoSys.mapper.SysUserMapper;
 import com.zcy.webexcel.DaoSys.pojo.LoginUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

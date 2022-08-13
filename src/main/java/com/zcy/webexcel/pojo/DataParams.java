@@ -1,4 +1,4 @@
-package com.zcy.webexcel.DaoSys.pojo;
+package com.zcy.webexcel.pojo;
 
 import lombok.Data;
 

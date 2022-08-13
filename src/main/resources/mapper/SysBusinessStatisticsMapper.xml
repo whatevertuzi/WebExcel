@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zcy.webexcel.DaoSys.mapper.SysBusinessStatisticsMapper">
 
-    <resultMap id="BaseResultMap" type="com.zcy.webexcel.DaoSys.SysBusinessStatistics">
+    <resultMap id="BaseResultMap" type="com.zcy.webexcel.DaoSys.pojo.SysBusinessStatistics">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="serviceDate" column="service_date" jdbcType="DATE"/>
             <result property="problemsCount" column="problems_count" jdbcType="INTEGER"/>

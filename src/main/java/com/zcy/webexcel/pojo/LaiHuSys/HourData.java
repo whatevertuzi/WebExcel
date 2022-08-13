@@ -1,4 +1,4 @@
-package com.zcy.webexcel.DaoSys.pojo;
+package com.zcy.webexcel.pojo.LaiHuSys;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;

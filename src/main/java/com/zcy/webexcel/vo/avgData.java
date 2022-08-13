@@ -1,4 +1,4 @@
-package com.zcy.webexcel.DaoSys.pojo;
+package com.zcy.webexcel.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class varianceData {
+public class avgData {
 //   private int abandonCallNum_5s;
 //   private int abandonCallNum_10s;
 //   private int abandonCallNum_15s;
@@ -26,36 +26,32 @@ public class varianceData {
 //   private int abandoncallNum;
 //   private int abnormalCallLoss;
    @ExcelProperty(value = "开始时间",index = 0)
-   @DateTimeFormat("HH:mm:ss")
+   @DateTimeFormat("HH:mm")
    private String  startTime;
 //   @ExcelProperty(value = "结束时间")
 //   @DateTimeFormat("HH:mm:ss")
 //   private Date endTime;
-
 //   @ExcelProperty(value = "进线量总数")
 //   private int acdIncallNum;
-   @ExcelProperty(value = "呼入数",index = 1)
-   private Integer  incallNum;
+   @ExcelProperty(value = "呼入数方差",index = 1)
+   private double  incallNum;
 
-   @ExcelProperty(value = "呼入接通数",index = 2)
-   private Integer incallAnswerNum;
+   @ExcelProperty(value = "呼入接通数方差",index = 2)
+   private double incallAnswerNum;
 
-   @ExcelProperty(value = "呼出数",index = 3)
-   private Integer  outcallNum;
+   @ExcelProperty(value = "呼出数方差",index = 3)
+   private double  outcallNum;
 
-   @ExcelProperty(value = "手机呼出数",index = 4)
-   private Integer phoneCall;
+   @ExcelProperty(value = "呼入放弃数方差",index = 5)
+   private double actualCallLoss;
 
-   @ExcelProperty(value = "呼入放弃数",index = 5)
-   private Integer actualCallLoss;
-
-   @ExcelProperty(value = "呼损率",index = 6)
-   private Float floatActualCallLossRate;
+   @ExcelProperty(value = "呼损率方差",index = 6)
+   private double floatActualCallLossRate;
 
    private String actualCallLossRate;
 
-   @ExcelProperty(value = "最大坐席登陆数",index = 7)
-   private int  maxLoginAgent;
+   @ExcelProperty(value = "最大坐席登陆数方差",index = 7)
+   private double  maxLoginAgent;
    //   @ExcelProperty(value = "平均放弃所有时间",index = 8)
 //   private int avgAbandoncallTime;
    //   @ExcelProperty(value = "平均来电应答时间",index =9)

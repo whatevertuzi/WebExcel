@@ -1,4 +1,4 @@
-package com.zcy.webexcel.DaoSys.vo;
+package com.zcy.webexcel.vo;
 
 import java.io.Serializable;
 

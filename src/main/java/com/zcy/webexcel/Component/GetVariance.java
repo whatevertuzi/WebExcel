@@ -4,9 +4,9 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.read.listener.PageReadListener;
 import com.alibaba.excel.write.metadata.WriteSheet;
-import com.zcy.webexcel.DaoSys.pojo.HourData;
-import com.zcy.webexcel.DaoSys.pojo.avgData;
-import com.zcy.webexcel.DaoSys.pojo.varData;
+import com.zcy.webexcel.pojo.LaiHuSys.HourData;
+import com.zcy.webexcel.vo.avgData;
+import com.zcy.webexcel.vo.varData;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;

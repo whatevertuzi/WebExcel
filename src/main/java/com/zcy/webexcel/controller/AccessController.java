@@ -2,8 +2,8 @@ package com.zcy.webexcel.controller;
 
 import com.zcy.webexcel.DaoSys.pojo.SysUser;
 import com.zcy.webexcel.DaoSys.pojo.LogOut;
-import com.zcy.webexcel.DaoSys.vo.JsonResult;
-import com.zcy.webexcel.DaoSys.vo.ResultCode;
+import com.zcy.webexcel.vo.JsonResult;
+import com.zcy.webexcel.vo.ResultCode;
 import com.zcy.webexcel.service.AccessService;
 import org.springframework.web.bind.annotation.*;
 

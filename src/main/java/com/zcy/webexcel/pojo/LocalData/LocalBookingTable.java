@@ -1,9 +1,9 @@
-package com.zcy.webexcel.DaoSys.pojo;
+package com.zcy.webexcel.pojo.LocalData;
 
 import lombok.Data;
 
 @Data
-public class CsTableYuding {
+public class LocalBookingTable {
     String group;
     String duty;
     String No;

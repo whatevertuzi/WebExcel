@@ -1,8 +1,8 @@
 package com.zcy.webexcel.service;
 
 import com.zcy.webexcel.DaoSys.pojo.SysUser;
-import com.zcy.webexcel.DaoSys.vo.JsonResult;
-import com.zcy.webexcel.DaoSys.vo.ResultCode;
+import com.zcy.webexcel.vo.JsonResult;
+import com.zcy.webexcel.vo.ResultCode;
 
 public interface AccessService {
 

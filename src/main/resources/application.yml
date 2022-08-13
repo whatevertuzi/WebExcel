@@ -22,7 +22,7 @@ spring:
 ##      poolPreparedStatements: true
     two:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://10.3.103.182/day_data
+      url: jdbc:mysql://10.3.103.182/test_data
       username: root
       password: 123456
   redis:

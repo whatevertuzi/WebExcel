@@ -2,9 +2,9 @@ package com.zcy.webexcel.Component;
 
 
 import com.alibaba.fastjson.JSON;
-import com.zcy.webexcel.DaoSys.vo.JsonResult;
-import com.zcy.webexcel.DaoSys.vo.ResultCode;
-import com.zcy.webexcel.DaoSys.vo.ResultTool;
+import com.zcy.webexcel.vo.JsonResult;
+import com.zcy.webexcel.vo.ResultCode;
+import com.zcy.webexcel.vo.ResultTool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.*;

@@ -10,6 +10,8 @@ import com.zcy.webexcel.service.GetLaiHuDataService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +72,15 @@ public class GetLaiHuDataServiceImpl implements GetLaiHuDataService {
         return page.getNum();
     }
 
+
+    private Double twoScale(Double number){
+        if (number == null)
+            return null;
+        //利用BigDecimal来实现四舍五入.保留一位小数
+        //1代表保留1位小数,保留两位小数就是2,依此累推
+        //BigDecimal.ROUND_HALF_UP 代表使用四舍五入的方式
+        return new BigDecimal(number).setScale(1, RoundingMode.HALF_UP).doubleValue();
+    }
     /**
      * @param beginTime 开始时间
      * @param endTime 结束时间
@@ -99,7 +110,7 @@ public class GetLaiHuDataServiceImpl implements GetLaiHuDataService {
             if (Objects.equals(datas.getActualCallLossRate(), "0.00%")){
                 datas.setFloatActualCallLossRate((double) 0);
             }else {
-                datas.setFloatActualCallLossRate(Double.parseDouble(datas.getActualCallLossRate().substring(0,4))*0.01);
+                datas.setFloatActualCallLossRate(twoScale(Double.parseDouble(datas.getActualCallLossRate().substring(0,4))*0.01));
             }
             datasList.add(datas);
         }

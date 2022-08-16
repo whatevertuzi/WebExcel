@@ -23,7 +23,6 @@ import com.zcy.webexcel.pojo.LaiHuSys.AgentReport;
 import com.zcy.webexcel.pojo.LaiHuSys.AgentSatisfy;
 import com.zcy.webexcel.pojo.LaiHuSys.HourData;
 import com.zcy.webexcel.service.GetCrsDataService;
-import com.zcy.webexcel.service.GetLocalDataService;
 import com.zcy.webexcel.Utils.WriteImgUtil;
 import com.zcy.webexcel.service.BookingService;
 import com.zcy.webexcel.service.GetLaiHuDataService;
@@ -56,16 +55,13 @@ import static com.zcy.webexcel.Utils.GetListUtil.getNoName;
 public class BookingServiceImpl implements BookingService {
 
     private final GetLaiHuDataService getLaiHuDataService;
-    private final GetLocalDataService getLocalDataService;
     private final GetCrsDataService getCrsDataService;
-
     //Mapper
     private final SysBusinessStatisticsMapper sysBusinessStatisticsMapper;
     private final YudingDayMapper yudingDayMapper;
 
-    public BookingServiceImpl(GetLaiHuDataService getLaiHuDataService, GetLocalDataService getLocalDataService, GetCrsDataService getCrsDataService, SysBusinessStatisticsMapper sysBusinessStatisticsMapper, YudingDayMapper yudingDayMapper) {
+    public BookingServiceImpl(GetLaiHuDataService getLaiHuDataService,GetCrsDataService getCrsDataService, SysBusinessStatisticsMapper sysBusinessStatisticsMapper, YudingDayMapper yudingDayMapper) {
         this.getLaiHuDataService = getLaiHuDataService;
-        this.getLocalDataService = getLocalDataService;
         this.getCrsDataService = getCrsDataService;
         this.sysBusinessStatisticsMapper = sysBusinessStatisticsMapper;
         this.yudingDayMapper = yudingDayMapper;
@@ -413,10 +409,10 @@ public class BookingServiceImpl implements BookingService {
         String beginTime = (String) jsonObject.get("beginTime");
         byte[] bytes= Base64.getDecoder().decode(imageBase.substring(23));
         String itJpgPath;
-        itJpgPath = "FilesIt/IT" + beginTime.substring(0, 10) + ".jpg";
+        itJpgPath = "FilesIt/Yuding" + beginTime.substring(0, 10) + ".jpg";
         try{
             Base2ImgUtil.generateImg(bytes,itJpgPath);
-            WriteImgUtil.addImageToExcel(new File("FilesIt/IT" + beginTime.substring(0, 10) + ".xlsx"), 1, bytes,(short) 0, 11, (short) 7, 27);
+            WriteImgUtil.addImageToExcel(new File("FilesIt/Yuding" + beginTime.substring(0, 10) + ".xlsx"), 1, bytes,(short) 0, 11, (short) 7, 27);
         }catch(Exception e){
             return ResultTool.fail(ResultCode.COMMON_FAIL);
         }

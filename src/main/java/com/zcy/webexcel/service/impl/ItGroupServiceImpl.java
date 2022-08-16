@@ -3,17 +3,19 @@ package com.zcy.webexcel.service.impl;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.mail.util.MailSSLSocketFactory;
 import com.zcy.webexcel.Component.GetVariance;
+import com.zcy.webexcel.DaoSys.pojo.LocalData;
+import com.zcy.webexcel.pojo.DailyData;
 import com.zcy.webexcel.pojo.DataParams;
 import com.zcy.webexcel.pojo.LaiHuSys.*;
+import com.zcy.webexcel.pojo.LocalData.DemoData;
 import com.zcy.webexcel.vo.ItFillExcel;
 import com.zcy.webexcel.vo.JsonResult;
 import com.zcy.webexcel.vo.ResultCode;
 import com.zcy.webexcel.vo.ResultTool;
-import com.zcy.webexcel.Utils.Base2ImgUtil;
-import com.zcy.webexcel.pojo.LocalData.LocalDailyIt;
 import com.zcy.webexcel.service.GetLocalDataService;
 import com.zcy.webexcel.Utils.WriteImgUtil;
 import com.zcy.webexcel.service.GetLaiHuDataService;
@@ -66,14 +68,41 @@ public class ItGroupServiceImpl implements ItGroupService {
      */
     @Override
     public void getDaily(HttpServletResponse response, DataParams dataParams) throws Exception {
-        String domain =dataParams.getDoMain();
         String beginTime = dataParams.getBeginTime();
         String endTime = dataParams.getEndTime();
 
         response.addHeader("Content-Disposition", "attachment;filename=" + "test.xlsx");
         response.setContentType("application/vnd.ms-excel;charset=gb2312");
         ServletOutputStream outputStream = response.getOutputStream();
+        DailyData daily = getDailyData(beginTime, endTime);
+        List<HourData> timeDataList = daily.getHourDataList();
+        ItFillExcel itFillExcel =daily.getItFillExcel();
+        //返回给前端excel
+        ExcelWriter excelWriter = EasyExcel.write(outputStream).withTemplate(itFillPath).build();
+        WriteSheet writeSheet = EasyExcel.writerSheet("分时呼损").build();//本地和前后端公用
+        WriteSheet writeSheet1 = EasyExcel.writerSheet("数据汇总").build();//同上
+        excelWriter.fill(timeDataList, writeSheet);
+        excelWriter.fill(itFillExcel, writeSheet1);
+        excelWriter.finish();
+    }
+    @Override
+    public void getDaily(String beginTime, String endTime) throws Exception {
+        DailyData daily = getDailyData(beginTime, endTime);
+        List<HourData> timeDataList = daily.getHourDataList();
+        ItFillExcel itFillExcel =daily.getItFillExcel();
 
+        //excel写在本地
+        ExcelWriter excellocalWriter = EasyExcel.write(  "FilesIt/"+"IT" + beginTime.substring(0, 10) + ".xlsx").withTemplate(itFillPath).build();
+        WriteSheet writeSheet = EasyExcel.writerSheet("分时呼损").build();//本地和前后端公用
+        WriteSheet writeSheet1 = EasyExcel.writerSheet("数据汇总").build();//同上
+        excellocalWriter.fill(timeDataList, writeSheet);
+        excellocalWriter.fill(itFillExcel, writeSheet1);
+        excellocalWriter.finish();
+    }
+
+    @Override
+    public DailyData getDailyData(String beginTime, String endTime) throws Exception {
+        String domain = "helpdesk.greentree.com";
         List<HourData> timeDataList;
         List<DayData>  dayDataList;
         List<DayData>  monthDayDataList;
@@ -102,10 +131,10 @@ public class ItGroupServiceImpl implements ItGroupService {
         }
 
         //当日报修记录excel
-        LocalDailyIt dayLocalDailyIt = getLocalDataService.getLocalExcel(beginTime);
+        LocalData dayLocalDailyIt = getLocalDataService.getDay(beginTime.substring(0,10));
 
         //当月报修记录excel
-        LocalDailyIt monthLocalDailyIt = getLocalDataService.getLocalExcel(beginTime.substring(0,7));
+        LocalData monthLocalDailyIt = getLocalDataService.getMonth(beginTime.substring(0,10));
 
         ItFillExcel itFillExcel = new ItFillExcel();
 
@@ -155,7 +184,7 @@ public class ItGroupServiceImpl implements ItGroupService {
         itFillExcel.setPercentageMonthDone(twoScale(monthsatisifyList.stream().mapToDouble(Satisfy::getFloatPercentage).average().getAsDouble())*0.01);
 
         //当日报修处理数
-        itFillExcel.setDayDone(dayLocalDailyIt.getDayDone());
+        itFillExcel.setDayDone(dayLocalDailyIt.getDaydone());
 
         //当日发日报人数
         if (dayLocalDailyIt.getSignature()!=0){
@@ -196,21 +225,11 @@ public class ItGroupServiceImpl implements ItGroupService {
 
         //当月会签回访总数
         itFillExcel.setSignatureMonthDone(monthLocalDailyIt.getSignature());
+        DailyData dailyData = new DailyData();
+        dailyData.setHourDataList(timeDataList);
+        dailyData.setItFillExcel(itFillExcel);
 
-        //excel写在本地
-        ExcelWriter excellocalWriter = EasyExcel.write(  "FilesIt/"+"IT" + beginTime.substring(0, 10) + ".xlsx").withTemplate(itFillPath).build();
-        WriteSheet writeSheet = EasyExcel.writerSheet("分时呼损").build();//本地和前后端公用
-        WriteSheet writeSheet1 = EasyExcel.writerSheet("数据汇总").build();//同上
-        excellocalWriter.fill(timeDataList, writeSheet);
-        excellocalWriter.fill(itFillExcel, writeSheet1);
-        excellocalWriter.finish();
-
-        //返回给前端excel
-        ExcelWriter excelWriter = EasyExcel.write(outputStream).withTemplate(itFillPath).build();
-        excelWriter.fill(timeDataList, writeSheet);
-        excelWriter.fill(itFillExcel, writeSheet1);
-        excelWriter.finish();
-
+        return dailyData;
     }
 
     @Value("${templateFile.varianceDemo.path.dev}")
@@ -330,20 +349,11 @@ public class ItGroupServiceImpl implements ItGroupService {
 
 
 
-    /**
-     * @param jsonObject
-     * @return
-     */
+
     @Override
-    public JsonResult<ResultCode> sendEmail(JSONObject jsonObject) throws GeneralSecurityException, MessagingException, UnsupportedEncodingException {
-        String imageBase = String.valueOf(jsonObject.get("imageBase64"));
-        String beginTime = (String) jsonObject.get("beginTime");
-        byte[] bytes= Base64.getDecoder().decode(imageBase.substring(23));
-        String itJpgPath;
-        itJpgPath = "FilesIt/IT" + beginTime.substring(0, 10) + ".jpg";
+    public JsonResult<ResultCode> sendEmail(String beginTime,byte[] bytes) throws GeneralSecurityException, MessagingException, UnsupportedEncodingException {
         try{
-            Base2ImgUtil.generateImg(bytes,itJpgPath);
-            WriteImgUtil.addImageToExcel(new File("FilesIt/IT" + beginTime.substring(0, 10) + ".xlsx"), 1, bytes,(short) 0, 11, (short) 7, 27);
+            WriteImgUtil.addImageToExcel(new File("FilesIt/IT" + beginTime.substring(0, 10) + ".xlsx"), 1,Base64.getDecoder().decode(bytes),(short) 0, 11, (short) 7, 27);
         }catch(Exception e){
             return ResultTool.fail(ResultCode.COMMON_FAIL);
         }
@@ -385,16 +395,16 @@ public class ItGroupServiceImpl implements ItGroupService {
         InternetAddress duhaiqiao = new InternetAddress("duhaiqiao@998.com","杜海桥");
         InternetAddress zhangqian = new InternetAddress("zhangqiana@998.com","张倩");
         InternetAddress zhangchenyang = new InternetAddress("zhangchenyang@998.com","张晨阳");
-        mimeMessage.setRecipient(Message.RecipientType.TO,zhuwentao);
-        InternetAddress[] internetAddressCC={duhaiqiao,zhangqian,zhangchenyang};
-        mimeMessage.setRecipients(Message.RecipientType.CC,internetAddressCC);
+        mimeMessage.setRecipient(Message.RecipientType.TO,zhangchenyang);
+//        InternetAddress[] internetAddressCC={duhaiqiao,zhangqian,zhangchenyang};
+//        mimeMessage.setRecipients(Message.RecipientType.CC,internetAddressCC);
         MimeBodyPart text = new MimeBodyPart();
         MimeBodyPart appendix = new MimeBodyPart();
         MimeBodyPart image = new MimeBodyPart();
         //邮件标题
         mimeMessage.setSubject("日报-实施服务组");
         //准备图片
-        DataHandler dh = new DataHandler(new FileDataSource("FilesIt/IT"+beginTime.substring(0,10)+".jpg")); // 读取本地文件
+        DataHandler dh = new DataHandler(new FileDataSource("FilesIt/IT"+beginTime.substring(0,10)+".png")); // 读取本地文件
         image.setDataHandler(dh);		            // 将图片数据添加到“节点”
         image.setContentID("image_fairy_tail");	    // 为“节点”设置一个唯一编号（在文本“节点”将引用该ID）
         //准备文本
@@ -428,5 +438,25 @@ public class ItGroupServiceImpl implements ItGroupService {
         transport.close();
 
         return ResultTool.success(ResultCode.SUCCESS);
+    }
+
+
+    /**
+     * @param response
+     * @param dataParams
+     * @throws Exception
+     */
+    @Override
+    public void getRecordData(HttpServletResponse response, DataParams dataParams) throws Exception {
+        String beginTime= dataParams.getBeginTime();
+        String endTime= dataParams.getEndTime();
+        response.addHeader("Content-Disposition", "attachment;filename=" + "test.xlsx");
+        response.setContentType("application/vnd.ms-excel;charset=gb2312");
+        ServletOutputStream outputStream = response.getOutputStream();
+        List<DemoData> demoDataList;
+        LocalData condData = getLocalDataService.getCond(beginTime,endTime);
+        JSONArray demoDataListJson = JSONObject.parseArray((String) condData.getDatalist());
+        List<DemoData> demoData = demoDataListJson.toJavaList(DemoData.class);
+        EasyExcel.write(outputStream, DemoData.class).sheet("汇总").doWrite(demoData);
     }
 }

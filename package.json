@@ -1,0 +1,7 @@
+{
+  "name": "WebExcel",
+  "version": "1.0.0",
+  "dependencies": {
+    "system": "^2.0.1"
+  }
+}

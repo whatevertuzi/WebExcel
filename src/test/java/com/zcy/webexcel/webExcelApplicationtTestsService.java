@@ -9,9 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 class webExcelApplicationtTestsService {
     @Autowired
     PasswordEncoder passwordEncoder;
+
+
+
+
     @Test
     public void testEncoder(){
-       String pw = passwordEncoder.encode("booking998");
+       String pw = passwordEncoder.encode("lishilong998");
         System.out.println(pw);
     }
 
@@ -21,6 +25,12 @@ class webExcelApplicationtTestsService {
         String typeName2 = "嘿嘿";
         String a = "\""+typeName1+","+typeName2+"\"";
         System.out.println(a);
+    }
+
+    @Test
+    public void testTime() throws Exception {
+
+
     }
 
 

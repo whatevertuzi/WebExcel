@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zcy.webexcel.DaoSys.mapper.LocalDataMapper">
+
+    <resultMap id="BaseResultMap" type="com.zcy.webexcel.DaoSys.pojo.LocalData">
+            <id property="date" column="Date" jdbcType="DATE"/>
+            <result property="daydone" column="dayDone" jdbcType="DOUBLE"/>
+            <result property="people" column="people" jdbcType="DOUBLE"/>
+            <result property="hour" column="hour" jdbcType="DOUBLE"/>
+            <result property="signature" column="signature" jdbcType="DOUBLE"/>
+            <result property="datalist" column="dataList" jdbcType="OTHER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        Date,dayDone,people,
+        hour,signature,dataList
+    </sql>
+</mapper>

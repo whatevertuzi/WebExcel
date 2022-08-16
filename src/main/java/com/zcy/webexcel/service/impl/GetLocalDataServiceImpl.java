@@ -1,36 +1,75 @@
 package com.zcy.webexcel.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.zcy.webexcel.vo.CrsData;
-import com.zcy.webexcel.pojo.LocalData.LocalDailyIt;
-import com.zcy.webexcel.Utils.SimpleHttpUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.zcy.webexcel.DaoSys.mapper.LocalDataMapper;
+import com.zcy.webexcel.DaoSys.pojo.LocalData;
+import com.zcy.webexcel.DaoSys.pojo.SysBusinessStatistics;
+import com.zcy.webexcel.pojo.LocalData.DemoData;
 import com.zcy.webexcel.service.GetLocalDataService;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class GetLocalDataServiceImpl implements GetLocalDataService {
-    @Override
-    public LocalDailyIt getLocalExcel(String beginTime) throws Exception {
-        String Url = "http://10.3.28.20:8899/getexcel";
-        JSONObject Param = new JSONObject();
-        Param.put("beginTime", beginTime);
-        HashMap<String,String> header =new HashMap<>();
-        setHeader(header);
-        JSONObject result = JSONObject.parseObject(SimpleHttpUtils.post(Url, header, Param.toJSONString().getBytes()));
-        return JSON.parseObject(String.valueOf(JSON.parseObject(result.get("data").toString())), LocalDailyIt.class);
+    private final LocalDataMapper localDataMapper;
+
+    public GetLocalDataServiceImpl(LocalDataMapper localDataMapper) {
+        this.localDataMapper = localDataMapper;
     }
 
-    private static void setHeader(HashMap<String, String> header) {
-        header.put("Accept-Encoding","gzip, deflate");
-        header.put("Accept-Language","zh-CN,zh;q=0.9");
-        header.put("Connection","keep-alive");
-        header.put("Content-Length","275");
-        header.put("Content-Type","application/json; charset=UTF-8");
-        header.put("Cookie","JSESSIONID=EF80FDDA60AB59C6DA05B28BA4107CE8");
-        header.put("Host","10.3.28.20:8899");
-        header.put("User-Agent","Mozilla/5.0 (Windows_s3 NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36");
-        header.put("X-Requested-With","XMLHttpRequest");
+    @Override
+    public LocalData getDay(String beginTime) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date beginTimeDate = format.parse(beginTime);
+        LambdaQueryWrapper<LocalData> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(LocalData::getDate,beginTimeDate);
+        return localDataMapper.selectOne(lambdaQueryWrapper);
     }
+
+    /**
+     * @param beginTime
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public LocalData getMonth(String beginTime) throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = format.parse(beginTime.substring(0,8)+"01");
+        return getLocalData(beginTime, format, startDate);
+    }
+    @Override
+    public LocalData getCond(String beginTime,String endTime) throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = format.parse(beginTime.substring(0,10));
+        return getLocalData(endTime, format, startDate);
+    }
+
+    private LocalData getLocalData(String endTime, SimpleDateFormat format, Date startDate) throws ParseException {
+        Date endDate = format.parse(endTime.substring(0,10));
+        LambdaQueryWrapper<LocalData> MonthQueryWrapper = new LambdaQueryWrapper<>();
+        MonthQueryWrapper.ge(LocalData::getDate,startDate);//大于开始日期
+        MonthQueryWrapper.le(LocalData::getDate,endDate);//小于结束日期
+        List<LocalData> localDataList = localDataMapper.selectList(MonthQueryWrapper);
+        LocalData localData = new LocalData();
+        List<DemoData> finalDemoDataList = new ArrayList<>();
+        for (LocalData localDatali : localDataList) {
+            Object datalist = localDatali.getDatalist();
+            JSONArray demoDataList = JSONObject.parseArray((String) datalist);
+            List<DemoData> demoData = demoDataList.toJavaList(DemoData.class);
+            finalDemoDataList.addAll(demoData);
+        }
+        String s = JSONObject.toJSONString(finalDemoDataList);
+        localData.setDatalist(s);
+        localData.setSignature(localDataList.stream().mapToDouble(LocalData::getSignature).sum());
+        return localData;
+    }
+
+
 }

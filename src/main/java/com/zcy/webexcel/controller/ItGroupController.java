@@ -9,8 +9,11 @@ import com.zcy.webexcel.vo.ResultTool;
 import com.zcy.webexcel.service.ItGroupService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 
 @RestController
 @CrossOrigin
@@ -71,15 +74,14 @@ public class ItGroupController {
         }
     }
     //发送邮件
-    @PostMapping("email")
-    public JsonResult<ResultCode> sendEmail(@RequestBody JSONObject jsonObject){
-        try {
-            itGroupService.sendEmail(jsonObject);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResultTool.fail(ResultCode.COMMON_FAIL);
-        }
-        return ResultTool.success(ResultCode.SUCCESS);
+//    @PostMapping("email")
+//    public JsonResult<ResultCode> sendEmail(@RequestBody JSONObject jsonObject) throws MessagingException, GeneralSecurityException, UnsupportedEncodingException {
+//        return itGroupService.sendEmail();
+//    }
+    @GetMapping("record")
+    public void getRecordData(HttpServletResponse response, @RequestParam("data")String data) throws Exception {
+        DataParams dataParams = JSON.parseObject(data,DataParams.class);
+        itGroupService.getRecordData(response,dataParams);
     }
 
 }

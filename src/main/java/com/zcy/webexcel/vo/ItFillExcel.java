@@ -18,14 +18,14 @@ public class ItFillExcel {
     private String PercentageIsDone;
     private String PercentageDiff;
     private Double PercentageMonthDone;
-    private Integer dayDone;
-    private Integer people;
-    private Integer hour;
+    private Double dayDone;
+    private Double people;
+    private Double hour;
     private String isDone;
     private Double dayAvgDone;
     private String signaturePlan;
     private String signature;
     private String signatureIsDone;
     private String signatureDiff;
-    private Integer signatureMonthDone;
+    private Double signatureMonthDone;
 }
